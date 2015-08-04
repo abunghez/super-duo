@@ -1,13 +1,16 @@
 package it.jaschke.alexandria;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -43,7 +46,17 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private static final int ZBAR_SCANNER_REQUEST = 0;
     private static final int ZBAR_QR_SCANNER_REQUEST = 1;
 
+    public final static String SERVICE_DONE_EVENT = "SERVICE_DONE_EVENT";
+
+
     public AddBook(){
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(new AddBookMessageReceiver(),
+                new IntentFilter(SERVICE_DONE_EVENT));
     }
 
     @Override
@@ -87,7 +100,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 bookIntent.putExtra(BookService.EAN, ean);
                 bookIntent.setAction(BookService.FETCH_BOOK);
                 getActivity().startService(bookIntent);
-                AddBook.this.restartLoader();
+
             }
         });
 
@@ -219,5 +232,15 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                     }
             }
+    }
+
+    private class AddBookMessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == SERVICE_DONE_EVENT) {
+                AddBook.this.restartLoader();
+            }
+        }
     }
 }
