@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import it.jaschke.alexandria.AddBook;
 import it.jaschke.alexandria.MainActivity;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
@@ -87,8 +86,6 @@ public class BookService extends IntentService {
 
         if(bookEntry.getCount()>0){
             bookEntry.close();
-            /* already in db, can load from content resolver */
-            searchDone();
             return;
         }
 
@@ -202,8 +199,6 @@ public class BookService extends IntentService {
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error ", e);
         }
-
-        searchDone();
     }
 
     private void writeBackBook(String ean, String title, String subtitle, String desc, String imgUrl) {
@@ -234,11 +229,5 @@ public class BookService extends IntentService {
             getContentResolver().insert(AlexandriaContract.CategoryEntry.CONTENT_URI, values);
             values= new ContentValues();
         }
-    }
-
-
-    private void searchDone() {
-        Intent intent = new Intent(AddBook.SERVICE_DONE_EVENT);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
  }
