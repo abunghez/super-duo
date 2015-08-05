@@ -187,7 +187,6 @@ public class BookService extends IntentService {
                 imgUrl = bookInfo.getJSONObject(IMG_URL_PATH).getString(IMG_URL);
             }
 
-            writeBackBook(ean, title, subtitle, desc, imgUrl);
 
             if(bookInfo.has(AUTHORS)) {
                 writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
@@ -195,6 +194,12 @@ public class BookService extends IntentService {
             if(bookInfo.has(CATEGORIES)){
                 writeBackCategories(ean,bookInfo.getJSONArray(CATEGORIES) );
             }
+
+            /* Move the book to the end, so that the loader gets
+            triggered only when all information is available (fix for #2 - crash when adding a book).
+             */
+            writeBackBook(ean, title, subtitle, desc, imgUrl);
+
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error ", e);
