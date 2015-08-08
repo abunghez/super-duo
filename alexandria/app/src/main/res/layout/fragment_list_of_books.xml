@@ -17,7 +17,8 @@
             android:layout_alignParentRight="true"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"/>
 
         <android.support.v7.widget.SearchView
             android:layout_width = "fill_parent"
