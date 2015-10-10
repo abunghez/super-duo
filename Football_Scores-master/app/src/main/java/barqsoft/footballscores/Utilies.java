@@ -69,7 +69,8 @@ public class Utilies
     {
         if (teamname==null){return R.drawable.no_icon;}
         switch (teamname)
-        {
+        { //This is the set of icons that are currently in the app. Feel free to find and add more
+            //as you go.
             case "Arsenal London FC" : return R.drawable.arsenal;
             case "Manchester United FC" : return R.drawable.manchester_united;
             case "Swansea City" : return R.drawable.swansea_city_afc;

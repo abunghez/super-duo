@@ -54,7 +54,7 @@ public class myFetchService extends IntentService
 
         Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
                 appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
-        //Log.v(LOG_TAG, fetch_build.toString()); //log spam
+        //Log.v(LOG_TAG, "The url we are looking at is: "+fetch_build.toString()); //log spam
         HttpURLConnection m_connection = null;
         BufferedReader reader = null;
         String JSON_data = null;
@@ -63,7 +63,7 @@ public class myFetchService extends IntentService
             URL fetch = new URL(fetch_build.toString());
             m_connection = (HttpURLConnection) fetch.openConnection();
             m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token","e136b7858d424b9da07c88f28b61989a");
+            m_connection.addRequestProperty("X-Auth-Token",getString(R.string.api_key));
             m_connection.connect();
 
             // Read the input stream into a String
@@ -82,7 +82,6 @@ public class myFetchService extends IntentService
                 // buffer for debugging.
                 buffer.append(line + "\n");
             }
-
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
                 return;
@@ -135,11 +134,21 @@ public class myFetchService extends IntentService
     private void processJSONdata (String JSONdata,Context mContext, boolean isReal)
     {
         //JSON data
-        final String SERIE_A = "357";
-        final String PREMIER_LEGAUE = "354";
-        final String CHAMPIONS_LEAGUE = "362";
-        final String PRIMERA_DIVISION = "358";
-        final String BUNDESLIGA = "351";
+        // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
+        // be updated. Feel free to use the codes
+        final String BUNDESLIGA1 = "394";
+        final String BUNDESLIGA2 = "395";
+        final String LIGUE1 = "396";
+        final String LIGUE2 = "397";
+        final String PREMIER_LEAGUE = "398";
+        final String PRIMERA_DIVISION = "399";
+        final String SEGUNDA_DIVISION = "400";
+        final String SERIE_A = "401";
+        final String PRIMERA_LIGA = "402";
+        final String Bundesliga3 = "403";
+        final String EREDIVISIE = "404";
+
+
         final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
         final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
         final String FIXTURES = "fixtures";
@@ -174,14 +183,19 @@ public class myFetchService extends IntentService
             Vector<ContentValues> values = new Vector <ContentValues> (matches.length());
             for(int i = 0;i < matches.length();i++)
             {
+
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString("href");
                 League = League.replace(SEASON_LINK,"");
-                if(     League.equals(PREMIER_LEGAUE)      ||
+                //This if statement controls which leagues we're interested in the data from.
+                //add leagues here in order to have them be added to the DB.
+                // If you are finding no data in the app, check that this contains all the leagues.
+                // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
+                if(     League.equals(PREMIER_LEAGUE)      ||
                         League.equals(SERIE_A)             ||
-                        League.equals(CHAMPIONS_LEAGUE)    ||
-                        League.equals(BUNDESLIGA)          ||
+                        League.equals(BUNDESLIGA1)         ||
+                        League.equals(BUNDESLIGA2)         ||
                         League.equals(PRIMERA_DIVISION)     )
                 {
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
