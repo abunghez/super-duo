@@ -31,6 +31,11 @@ import barqsoft.footballscores.R;
 public class myFetchService extends IntentService
 {
     public static final String LOG_TAG = "myFetchService";
+    public static final String ACTION_UPDATE_MATCHES=
+            "barqsoft.footbalscores.myFetchService.ACTION_UPDATE_MATCHES";
+    public static final String ACTION_UPDATE_LEAGUES =
+            "barqsoft.footbalscores.myFetchService.ACTION_UPDATE_LEAGUES";
+
     public myFetchService()
     {
         super("myFetchService");
@@ -39,12 +44,19 @@ public class myFetchService extends IntentService
     @Override
     protected void onHandleIntent(Intent intent)
     {
-        getData("n2");
-        getData("p2");
-
+        if (intent.getAction().equals(ACTION_UPDATE_MATCHES)) {
+            getData("n2");
+            getData("p2");
+        } else if (intent.getAction().equals(ACTION_UPDATE_MATCHES)) {
+            getLeagues();
+        }
+        stopSelf();
         return;
     }
 
+    private void getLeagues() {
+
+    }
     private void getData (String timeFrame)
     {
         //Creating fetch URL
@@ -196,7 +208,8 @@ public class myFetchService extends IntentService
                         League.equals(SERIE_A)             ||
                         League.equals(BUNDESLIGA1)         ||
                         League.equals(BUNDESLIGA2)         ||
-                        League.equals(PRIMERA_DIVISION)     )
+                        League.equals(PRIMERA_DIVISION)    ||
+                        League.equals(SEGUNDA_DIVISION))
                 {
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
                             getString("href");

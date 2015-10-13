@@ -10,6 +10,7 @@ public class Utilies
     public static final int CHAMPIONS_LEAGUE = 362;
     public static final int PRIMERA_DIVISION = 358;
     public static final int BUNDESLIGA = 351;
+    public static final int SEGUNDA_DIVISION = 400;
     public static String getLeague(int league_num)
     {
         switch (league_num)
@@ -19,6 +20,7 @@ public class Utilies
             case CHAMPIONS_LEAGUE : return "UEFA Champions League";
             case PRIMERA_DIVISION : return "Primera Division";
             case BUNDESLIGA : return "Bundesliga";
+            case SEGUNDA_DIVISION: return "Segunda Division";
             default: return "Not known League Please report";
         }
     }

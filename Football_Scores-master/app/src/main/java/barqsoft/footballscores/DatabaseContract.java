@@ -10,6 +10,19 @@ import android.provider.BaseColumns;
 public class DatabaseContract
 {
     public static final String SCORES_TABLE = "scores_table";
+    public static final String LEAGUES_TABLE = "leagues_table";
+
+    public static final class leagues_table implements BaseColumns{
+        public static final String CAPTION_COL = "caption";
+
+        public static final Uri buildLeague() {
+            return BASE_CONTENT_URI.buildUpon().appendPath("leagues").build();
+        }
+
+        public static final String PATH = "leagues";
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+    }
     public static final class scores_table implements BaseColumns
     {
         //Table data
