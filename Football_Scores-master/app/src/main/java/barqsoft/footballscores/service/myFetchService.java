@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ public class myFetchService extends IntentService
         if (intent.getAction().equals(ACTION_UPDATE_MATCHES)) {
             getData("n2");
             getData("p2");
-        } else if (intent.getAction().equals(ACTION_UPDATE_MATCHES)) {
+        } else if (intent.getAction().equals(ACTION_UPDATE_LEAGUES)) {
             getLeagues();
         }
         stopSelf();
@@ -55,7 +56,54 @@ public class myFetchService extends IntentService
     }
 
     private void getLeagues() {
+        String BASE_URL = "http://api.football-data.org/alpha/soccerseasons";
 
+        Uri fetch_leagues = Uri.parse(BASE_URL);
+        HttpURLConnection con = null;
+        BufferedReader reader = null;
+        String json_data = "";
+        InputStream is = null;
+
+        JSONArray jsonArray;
+        try {
+            con = (HttpURLConnection) new URL(fetch_leagues.toString()).openConnection();
+            con.setRequestMethod("GET");
+            con.addRequestProperty("X-Auth-Token", getString(R.string.api_key));
+            con.connect();
+            is = con.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(is));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                json_data = json_data + line;
+            }
+
+            jsonArray = new JSONArray(json_data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonLinks = jsonArray.getJSONObject(i).getJSONObject("_links");
+                String selfLink = jsonLinks.getJSONObject("self").getString("href");
+                Uri selfUri = Uri.parse(selfLink);
+                int leagueId = Integer.parseInt(selfUri.getLastPathSegment());
+
+                String caption = jsonArray.getJSONObject(i).getString("caption");
+
+                ContentValues data = new ContentValues();
+
+
+            }
+
+
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage());
+        } finally {
+            try {
+                if (is != null) is.close();
+            } catch (IOException e1) {
+                Log.e(LOG_TAG, e1.getMessage());
+            }
+
+        }
     }
     private void getData (String timeFrame)
     {
