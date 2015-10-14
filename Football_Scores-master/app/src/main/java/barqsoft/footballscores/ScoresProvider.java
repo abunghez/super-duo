@@ -63,7 +63,7 @@ public class ScoresProvider extends ContentProvider
            {
                return MATCHES_WITH_LEAGUE;
            }
-           else if (link.contentEquals(DatabaseContract.leagues_table.buildLeague().toString()))
+           else if (link.startsWith(DatabaseContract.leagues_table.buildLeague().toString()))
            {
                return LEAGUES;
            }
@@ -146,7 +146,23 @@ public class ScoresProvider extends ContentProvider
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        return null;
+        Uri retUri = null;
+
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        switch (match_uri(uri)) {
+            case LEAGUES:
+                db.insertWithOnConflict(DatabaseContract.LEAGUES_TABLE, null, values,
+                        SQLiteDatabase.CONFLICT_REPLACE);
+                retUri = uri.buildUpon().appendPath(values.getAsString(DatabaseContract.leagues_table._ID)).build();
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                break;
+            default:
+                break;
+        }
+
+        return retUri;
     }
 
     @Override
@@ -181,6 +197,8 @@ public class ScoresProvider extends ContentProvider
                 return super.bulkInsert(uri,values);
         }
     }
+
+
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {

@@ -1,28 +1,39 @@
 package barqsoft.footballscores;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+
 /**
  * Created by yehya khaled on 3/3/2015.
  */
 public class Utilies
 {
-    public static final int SERIE_A = 357;
-    public static final int PREMIER_LEGAUE = 354;
-    public static final int CHAMPIONS_LEAGUE = 362;
-    public static final int PRIMERA_DIVISION = 358;
-    public static final int BUNDESLIGA = 351;
-    public static final int SEGUNDA_DIVISION = 400;
-    public static String getLeague(int league_num)
+   public static final int CHAMPIONS_LEAGUE = 362;
+
+    public static String getLeague(Context context, int league_num)
     {
-        switch (league_num)
-        {
-            case SERIE_A : return "Seria A";
-            case PREMIER_LEGAUE : return "Premier League";
-            case CHAMPIONS_LEAGUE : return "UEFA Champions League";
-            case PRIMERA_DIVISION : return "Primera Division";
-            case BUNDESLIGA : return "Bundesliga";
-            case SEGUNDA_DIVISION: return "Segunda Division";
-            default: return "Not known League Please report";
-        }
+        ContentResolver contentResolver;
+        Uri uri;
+        String[] projection = {"caption"};
+        Cursor result;
+        contentResolver = context.getContentResolver();
+        String ret;
+        uri = DatabaseContract.leagues_table.buildLeague()
+                .buildUpon()
+                .appendPath(String.valueOf(league_num))
+                .build();
+
+        result = contentResolver.query(uri, projection, null, null, null);
+
+        if (result.getCount() == 0)
+            return "Unknown Season";
+
+        ret = result.getString(0);
+        result.close();
+        return ret;
+
     }
     public static String getMatchDay(int match_day,int league_num)
     {
