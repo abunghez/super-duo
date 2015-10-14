@@ -20,16 +20,15 @@ public class Utilies
         Cursor result;
         contentResolver = context.getContentResolver();
         String ret;
-        uri = DatabaseContract.leagues_table.buildLeague()
-                .buildUpon()
-                .appendPath(String.valueOf(league_num))
-                .build();
-
-        result = contentResolver.query(uri, projection, null, null, null);
+        uri = DatabaseContract.leagues_table.buildLeague();
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(league_num);
+        result = contentResolver.query(uri, projection, null, selectionArgs , null);
 
         if (result.getCount() == 0)
             return "Unknown Season";
 
+        result.moveToFirst();
         ret = result.getString(0);
         result.close();
         return ret;

@@ -46,7 +46,7 @@ public class myFetchService extends IntentService
     protected void onHandleIntent(Intent intent)
     {
         if (intent.getAction().equals(ACTION_UPDATE_MATCHES)) {
-            getData("n2");
+            getData("n3");
             getData("p2");
         } else if (intent.getAction().equals(ACTION_UPDATE_LEAGUES)) {
             getLeagues();

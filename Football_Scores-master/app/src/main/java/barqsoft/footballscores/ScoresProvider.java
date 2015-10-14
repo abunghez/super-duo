@@ -131,7 +131,9 @@ public class ScoresProvider extends ContentProvider
                     DatabaseContract.SCORES_TABLE,
                     projection,SCORES_BY_LEAGUE,selectionArgs,null,null,sortOrder); break;
 
-            case LEAGUES: retCursor = mOpenHelper.getReadableDatabase().query(
+            case LEAGUES:
+
+                    retCursor = mOpenHelper.getReadableDatabase().query(
                     DatabaseContract.LEAGUES_TABLE,
                     projection, LEAGUES_BY_ID, selectionArgs, null, null, null);
 
@@ -152,6 +154,7 @@ public class ScoresProvider extends ContentProvider
 
         switch (match_uri(uri)) {
             case LEAGUES:
+                db.beginTransaction();
                 db.insertWithOnConflict(DatabaseContract.LEAGUES_TABLE, null, values,
                         SQLiteDatabase.CONFLICT_REPLACE);
                 retUri = uri.buildUpon().appendPath(values.getAsString(DatabaseContract.leagues_table._ID)).build();
