@@ -24,6 +24,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final int SCORES_LOADER = 0;
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
+    private int mSelectedId = -1;
 
     public MainScreenFragment()
     {
@@ -34,6 +35,9 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Intent service_start = new Intent(getActivity(), myFetchService.class);
         service_start.setAction(myFetchService.ACTION_UPDATE_MATCHES);
         getActivity().startService(service_start);
+    }
+    public void setSelectedId(int id) {
+        mSelectedId = id;
     }
     public void setFragmentDate(String date)
     {
@@ -57,9 +61,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                 ViewHolder selected = (ViewHolder) view.getTag();
                 mAdapter.detail_match_id = selected.match_id;
                 MainActivity.selected_match_id = (int) selected.match_id;
+                setSelectedId(-1);
                 mAdapter.notifyDataSetChanged();
             }
         });
+
         return rootView;
     }
 
@@ -73,6 +79,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor)
     {
+        int listPosition = 0;
         //Log.v(FetchScoreTask.LOG_TAG,"loader finished");
         //cursor.moveToFirst();
         /*
@@ -87,12 +94,23 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         cursor.moveToFirst();
         while (!cursor.isAfterLast())
         {
+            if (cursor.getInt(cursor.getColumnIndex(DatabaseContract.scores_table.MATCH_ID))
+                    == mSelectedId)
+            {
+                listPosition = i;
+            }
             i++;
             cursor.moveToNext();
         }
         //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
         //mAdapter.notifyDataSetChanged();
+        ListView lv = (ListView) getView().findViewById(R.id.scores_list);
+
+        lv.setSelection(listPosition);
+
+
+
     }
 
     @Override

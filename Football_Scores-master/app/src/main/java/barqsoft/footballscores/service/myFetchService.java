@@ -1,6 +1,7 @@
 package barqsoft.footballscores.service;
 
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +49,7 @@ public class myFetchService extends IntentService
         if (intent.getAction().equals(ACTION_UPDATE_MATCHES)) {
             getData("n3");
             getData("p2");
+            AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(0, R.id.widget_list_view);
         } else if (intent.getAction().equals(ACTION_UPDATE_LEAGUES)) {
             getLeagues();
         }

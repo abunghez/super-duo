@@ -97,4 +97,5 @@ public class scoresAdapter extends CursorAdapter
         return shareIntent;
     }
 
+
 }

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.ContactsContract;
 
 /**
  * Created by yehya khaled on 2/25/2015.
@@ -18,6 +19,7 @@ public class ScoresProvider extends ContentProvider
     private static final int MATCHES_WITH_LEAGUE = 101;
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
+    private static final int MATCHES_WITH_DATE_GT = 104;
     private static final int LEAGUES = 200;
 
     private UriMatcher muriMatcher = buildUriMatcher();
@@ -26,6 +28,8 @@ public class ScoresProvider extends ContentProvider
     private static final String SCORES_BY_LEAGUE = DatabaseContract.scores_table.LEAGUE_COL + " = ?";
     private static final String SCORES_BY_DATE =
             DatabaseContract.scores_table.DATE_COL + " LIKE ?";
+    private static final String SCORES_BY_DATE_GT =
+            DatabaseContract.scores_table.DATE_COL + " >= ?";
     private static final String SCORES_BY_ID =
             DatabaseContract.scores_table.MATCH_ID + " = ?";
 
@@ -38,6 +42,7 @@ public class ScoresProvider extends ContentProvider
         matcher.addURI(authority, "league" , MATCHES_WITH_LEAGUE);
         matcher.addURI(authority, "id" , MATCHES_WITH_ID);
         matcher.addURI(authority, "date" , MATCHES_WITH_DATE);
+        matcher.addURI(authority, "dategt", MATCHES_WITH_DATE_GT);
 
         matcher.addURI(authority, "leagues", LEAGUES);
         return matcher;
@@ -62,6 +67,10 @@ public class ScoresProvider extends ContentProvider
            else if(link.contentEquals(DatabaseContract.scores_table.buildScoreWithLeague().toString()))
            {
                return MATCHES_WITH_LEAGUE;
+           }
+           else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithDateGt().toString()))
+           {
+               return MATCHES_WITH_DATE_GT;
            }
            else if (link.startsWith(DatabaseContract.leagues_table.buildLeague().toString()))
            {
@@ -97,6 +106,8 @@ public class ScoresProvider extends ContentProvider
                 return DatabaseContract.scores_table.CONTENT_ITEM_TYPE;
             case MATCHES_WITH_DATE:
                 return DatabaseContract.scores_table.CONTENT_TYPE;
+            case MATCHES_WITH_DATE_GT:
+                return DatabaseContract.scores_table.CONTENT_TYPE;
             case LEAGUES:
                 return DatabaseContract.leagues_table.CONTENT_ITEM_TYPE;
             default:
@@ -131,6 +142,12 @@ public class ScoresProvider extends ContentProvider
                     DatabaseContract.SCORES_TABLE,
                     projection,SCORES_BY_LEAGUE,selectionArgs,null,null,sortOrder); break;
 
+            case MATCHES_WITH_DATE_GT:
+                    retCursor = mOpenHelper.getReadableDatabase().query(
+                            DatabaseContract.SCORES_TABLE,
+                            projection, SCORES_BY_DATE_GT, selectionArgs, null, null, sortOrder
+                    );
+                    break;
             case LEAGUES:
 
                     retCursor = mOpenHelper.getReadableDatabase().query(

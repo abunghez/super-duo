@@ -12,6 +12,8 @@ import barqsoft.footballscores.service.myFetchService;
 public class MainActivity extends ActionBarActivity
 {
     public static int selected_match_id;
+    public static String EXTRA_MATCH_ID = "MATCH_ID";
+    public static String EXTRA_PAGER_ID = "PAGER_ID";
     public static int current_fragment = 2;
     public static String LOG_TAG = "MainActivity";
     private final String save_tag = "Save Test";
@@ -28,6 +30,10 @@ public class MainActivity extends ActionBarActivity
                     .commit();
         }
 
+
+        Intent launchIntent = getIntent();
+        selected_match_id = launchIntent.getIntExtra(EXTRA_MATCH_ID, 0);
+        current_fragment = launchIntent.getIntExtra(EXTRA_PAGER_ID, 0) + 2;
         Intent intent = new Intent(this, myFetchService.class);
         intent.setAction(myFetchService.ACTION_UPDATE_LEAGUES);
         startService(intent);
