@@ -139,13 +139,15 @@ public class ScoresWidgetService extends RemoteViewsService {
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String matchDate = mCursor.getString(dateIdx);
-
+            String timeDescription;
 
             if (matchDate.equals(format.format(today))) {
                 views.setTextViewText(R.id.data_textview, mCursor.getString(timeIdx));
+                timeDescription = " at "+ mCursor.getString(timeIdx);
             } else {
 
                 views.setTextViewText(R.id.data_textview, matchDate);
+                timeDescription = " on " + matchDate + " at " +mCursor.getString(timeIdx);
             }
 
             views.setTextColor(R.id.data_textview, Color.BLACK);
@@ -163,6 +165,19 @@ public class ScoresWidgetService extends RemoteViewsService {
 
 
             views.setOnClickFillInIntent(R.id.list_item_id, fillInIntent);
+
+
+            String contentDescription = mCursor.getString(homeNameIdx) +  " versus "
+                    + mCursor.getString(awayNameIdx) + timeDescription;
+
+            int home_score = mCursor.getInt(homeScoreIdx);
+            int away_score = mCursor.getInt(awayScoreIdx);
+            if (home_score >= 0 && away_score >= 0)
+                contentDescription = contentDescription + ". Score "
+                        + home_score + " to "
+                        + away_score;
+
+            views.setContentDescription(R.id.list_item_id, contentDescription);
             return views;
         }
 

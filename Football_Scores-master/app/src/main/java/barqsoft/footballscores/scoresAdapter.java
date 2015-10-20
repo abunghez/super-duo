@@ -59,6 +59,7 @@ public class scoresAdapter extends CursorAdapter
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        String leagueName = Utilies.getLeague(context, cursor.getInt(COL_LEAGUE));
         View v = vi.inflate(R.layout.detail_fragment, null);
         ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
         if(mHolder.match_id == detail_match_id)
@@ -71,7 +72,7 @@ public class scoresAdapter extends CursorAdapter
             match_day.setText(Utilies.getMatchDay(cursor.getInt(COL_MATCHDAY),
                     cursor.getInt(COL_LEAGUE)));
             TextView league = (TextView) v.findViewById(R.id.league_textview);
-            league.setText(Utilies.getLeague(context,cursor.getInt(COL_LEAGUE)));
+            league.setText(leagueName);
             Button share_button = (Button) v.findViewById(R.id.share_button);
             share_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,6 +88,21 @@ public class scoresAdapter extends CursorAdapter
         {
             container.removeAllViews();
         }
+
+        String contentDescription = mHolder.home_name.getText() +  " versus "
+                + mHolder.away_name.getText() + " at "
+                + mHolder.date.getText();
+
+        int home_score = cursor.getInt(COL_HOME_GOALS);
+        int away_score = cursor.getInt(COL_AWAY_GOALS);
+        if (home_score >= 0 && away_score >= 0)
+            contentDescription = contentDescription + " Score "
+                    + home_score + " to "
+                    + away_score;
+        contentDescription = contentDescription + ". For " + leagueName;
+
+
+        view.setContentDescription(contentDescription);
 
     }
     public Intent createShareForecastIntent(String ShareText) {

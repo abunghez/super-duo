@@ -4,4 +4,5 @@
     android:previewImage="@drawable/football_appwidget_preview"
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/football_scores_widget" android:resizeMode="horizontal|vertical"
+
     />

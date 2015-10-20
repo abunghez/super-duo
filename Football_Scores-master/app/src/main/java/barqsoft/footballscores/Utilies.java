@@ -11,7 +11,7 @@ import android.net.Uri;
 public class Utilies
 {
    public static final int CHAMPIONS_LEAGUE = 362;
-
+    public static final String UNKNOWN_SCORE = " - ";
     public static String getLeague(Context context, int league_num)
     {
         ContentResolver contentResolver;
@@ -69,7 +69,7 @@ public class Utilies
     {
         if(home_goals < 0 || awaygoals < 0)
         {
-            return " - ";
+            return UNKNOWN_SCORE;
         }
         else
         {
