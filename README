@@ -1,0 +1,5 @@
+API key for Footbal Scores app should be placed in the
+
+./Football_Scores-master/app/src/main/res/values/strings.xml
+
+file. There is a string called "api_key".
