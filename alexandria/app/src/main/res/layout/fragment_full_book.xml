@@ -89,7 +89,7 @@
                         android:gravity="right|top"/>
                 </LinearLayout>
 
-                <ImageButton
+      <!--          <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/back_button"
@@ -100,7 +100,7 @@
                     android:layout_gravity="right|top"
                     android:layout_alignParentTop="true"
                     android:layout_alignRight="@+id/fullBookTitle"
-                    android:layout_alignEnd="@+id/fullBookTitle"/>
+                    android:layout_alignEnd="@+id/fullBookTitle"/> -->
 
 
             </RelativeLayout>
