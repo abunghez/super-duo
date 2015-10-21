@@ -5,8 +5,11 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,7 +74,7 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void fetchBook(String ean) {
-
+        boolean missionAbort = false;
         if(ean.length()!=13){
             return;
         }
@@ -130,6 +133,8 @@ public class BookService extends IntentService {
             bookJsonString = buffer.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error ", e);
+            missionAbort = true;
+
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -144,6 +149,15 @@ public class BookService extends IntentService {
 
         }
 
+        if (missionAbort) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(BookService.this, R.string.abort_text, Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
         final String ITEMS = "items";
 
         final String VOLUME_INFO = "volumeInfo";
@@ -163,8 +177,9 @@ public class BookService extends IntentService {
                 bookArray = bookJson.getJSONArray(ITEMS);
             }else{
                 Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
-                messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.not_found));
+                messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.not_found));
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+
                 return;
             }
 

@@ -82,6 +82,12 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             @Override
             public void afterTextChanged(Editable s) {
                 String ean =s.toString();
+
+                if (ean.length() > 0 && !ean.matches("[0-9]+")) {
+                    Toast.makeText(getActivity(), R.string.wrong_ean, Toast.LENGTH_SHORT).show();
+                    s.clear();
+                    return;
+                }
                 //catch isbn10 numbers
                 if(ean.length()==10 && !ean.startsWith("978")){
                     ean="978"+ean;
