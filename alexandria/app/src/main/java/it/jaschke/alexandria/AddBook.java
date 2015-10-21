@@ -242,8 +242,10 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                             ean.setText(data.getStringExtra(ZBarConstants.SCAN_RESULT));
                         }
                     } else {
-                        String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
-                        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                        if (data != null) {
+                            String error = data.getStringExtra(ZBarConstants.ERROR_INFO);
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                        }
                     }
             }
     }
