@@ -30,7 +30,7 @@ import barqsoft.footballscores.R;
 /**
  * Created by yehya khaled on 3/2/2015.
  */
-public class myFetchService extends IntentService
+public class MyFetchService extends IntentService
 {
     public static final String LOG_TAG = "myFetchService";
     public static final String ACTION_UPDATE_MATCHES=
@@ -38,7 +38,7 @@ public class myFetchService extends IntentService
     public static final String ACTION_UPDATE_LEAGUES =
             "barqsoft.footbalscores.myFetchService.ACTION_UPDATE_LEAGUES";
 
-    public myFetchService()
+    public MyFetchService()
     {
         super("myFetchService");
     }

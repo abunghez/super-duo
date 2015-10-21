@@ -5,16 +5,11 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import barqsoft.footballscores.service.ScoresWidgetService;
-import barqsoft.footballscores.service.myFetchService;
+import barqsoft.footballscores.service.MyFetchService;
 
 /**
  * Implementation of App Widget functionality.
@@ -70,8 +65,8 @@ public class FootballScoresWidget extends AppWidgetProvider {
          *  trigger database update through the myFetchService
          *  this will subsequently trigger a call to notifyAppWidgetViewDataChanged
          */
-        Intent queryIntent = new Intent(context, myFetchService.class);
-        queryIntent.setAction(myFetchService.ACTION_UPDATE_MATCHES);
+        Intent queryIntent = new Intent(context, MyFetchService.class);
+        queryIntent.setAction(MyFetchService.ACTION_UPDATE_MATCHES);
         context.startService(queryIntent);
     }
 }
