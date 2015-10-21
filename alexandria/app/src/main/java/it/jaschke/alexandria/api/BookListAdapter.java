@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +49,10 @@ public class BookListAdapter extends CursorAdapter {
 
         String imgUrl = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
 
-        try {
-            URL url = new URL(imgUrl);
+        if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
+
             Picasso.with(context).load(imgUrl).into(viewHolder.bookCover);
-        } catch (MalformedURLException e) {
+        } else {
             Log.e(LOG_TAG, "Bad URL: " + imgUrl);
             Picasso.with(context).load(R.drawable.ic_launcher).into(viewHolder.bookCover);
         }
