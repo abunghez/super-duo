@@ -4,6 +4,7 @@ package it.jaschke.alexandria.api;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +13,18 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
-import it.jaschke.alexandria.services.DownloadImage;
 
 /**
  * Created by saj on 11/01/15.
  */
 public class BookListAdapter extends CursorAdapter {
 
-
+    public final static String LOG_TAG="BookListAdapter";
     public static class ViewHolder {
         public final ImageView bookCover;
         public final TextView bookTitle;
@@ -44,7 +47,15 @@ public class BookListAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         String imgUrl = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        Picasso.with(context).load(imgUrl).into(viewHolder.bookCover);
+
+        try {
+            URL url = new URL(imgUrl);
+            Picasso.with(context).load(imgUrl).into(viewHolder.bookCover);
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Bad URL: " + imgUrl);
+            Picasso.with(context).load(R.drawable.ic_launcher).into(viewHolder.bookCover);
+        }
+
         //new DownloadImage(viewHolder.bookCover).execute(imgUrl);
 
         String bookTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
