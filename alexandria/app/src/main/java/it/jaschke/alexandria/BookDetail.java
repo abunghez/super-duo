@@ -137,11 +137,17 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
     }
 
+
+/** Not sure what was the purpose for this, but it really messed up book list navigation
+ * on my genymotion simulated Nexus 10, by popping backstack on each fragment replace (even
+ * in when the right_container should have been present )
     @Override
     public void onPause() {
-        super.onDestroyView();
         if(MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container)==null){
             getActivity().getSupportFragmentManager().popBackStack();
         }
+        super.onDestroyView();
+
     }
+    */
 }
